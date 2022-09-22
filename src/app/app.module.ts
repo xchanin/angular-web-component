@@ -1,5 +1,6 @@
-import { NgModule } from '@angular/core';
+import { Injector, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { createCustomElement } from '@angular/elements';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -13,6 +14,19 @@ import { AppComponent } from './app.component';
     AppRoutingModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [] // don't bootstrap, for web component
+  // bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule { 
+  constructor(protected injector: Injector) {
+
+  }
+
+  ngDoBootstrap() {
+    const wc = createCustomElement(AppComponent, {
+      injector: this.injector,
+    });
+
+    customElements.define('ANGULAR_WEB_COMPONENT', wc);
+  }
+}
