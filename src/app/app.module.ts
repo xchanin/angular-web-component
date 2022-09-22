@@ -14,19 +14,19 @@ import { AppComponent } from './app.component';
     AppRoutingModule
   ],
   providers: [],
-  bootstrap: [] // don't bootstrap, for web component
-  // bootstrap: [AppComponent]
+  // bootstrap: [] // don't bootstrap, for web component
+  bootstrap: [AppComponent]
 })
 export class AppModule { 
-  constructor(protected injector: Injector) {
+  // constructor(protected injector: Injector) {
 
-  }
+  // }
 
-  ngDoBootstrap() {
-    const wc = createCustomElement(AppComponent, {
-      injector: this.injector,
-    });
+  // ngDoBootstrap() {
+  //   const wc = createCustomElement(AppComponent, {
+  //     injector: this.injector,
+  //   });
 
-    customElements.define('ANGULAR_WEB_COMPONENT', wc);
-  }
+  //   customElements.define('ANGULAR_WEB_COMPONENT', wc);
+  // }
 }

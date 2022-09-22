@@ -7,7 +7,24 @@
     "build": "ng build",
     "build:wc": "ng build --configuration production --output-hashing none && node build-wc.js",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "build:app-host": "ng build app-host --configuration production",
+    "build:common": "ng build common --configuration production",
+    "build:demo": "ng build demo --configuration production",
+    "build:lcu": "ng build lcu --prod --single-bundle && npm run pack",
+    "demo": "npm run build:common && npm run start:demo",
+    "demo:lcu": "npm run build:common && npm run build:lcu && npm run start:demo",
+    "deploy": "npm version patch && npm run deploy:all",
+    "deploy:all": "npm run deploy:common && npm run deploy:lcu && npm run deploy:demo && npm run deploy:app-host",
+    "deploy:app-host": "npm version patch --prefix projects/app-host && npm run build:app-host && npm publish ./dist/app-host --access public",
+    "deploy:common": "npm version patch --prefix projects/common && npm run build:common && npm publish ./dist/common --access public",
+    "deploy:demo": "npm version patch --prefix projects/demo/ && npm run build:demo && npm publish ./dist/demo --access public",
+    "deploy:lcu": "npm version patch --prefix projects/lcu/ && npm run build:lcu && npm publish ./dist/lcu --access public",
+    "pack": "npm run pack:lcu",
+    "pack:join": "concat-glob-cli -f \"dist/lcu/wc/lcu.*.js\" -o dist/lcu/wc/app-host.lcu.js",
+    "pack:lcu": "rimraf dist/lcu/wc && mkdirp dist/lcu/wc && npm run pack:main && npm run pack:pollyfills && npm run pack:join",
+    "pack:main": "concat-glob-cli -f \"dist/lcu/main-es2015.*.js\" -o dist/lcu/wc/lcu.startup.js",
+    "pack:pollyfills": "concat-glob-cli -f \"dist/lcu/scripts.*.js\" -o dist/lcu/wc/lcu.pollyfills.js"
   },
   "private": true,
   "dependencies": {
@@ -30,6 +47,7 @@
     "@angular/compiler-cli": "^14.0.0",
     "@types/jasmine": "~4.0.0",
     "concat": "^1.0.3",
+    "concat-glob-cli": "^0.1.0",
     "fs-extra": "^10.1.0",
     "jasmine-core": "~4.1.0",
     "karma": "~6.3.0",
@@ -37,6 +55,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.0.0",
     "karma-jasmine-html-reporter": "~1.7.0",
+    "mkdirp": "^1.0.4",
     "ng-packagr": "^14.2.1",
     "typescript": "~4.7.2"
   }
